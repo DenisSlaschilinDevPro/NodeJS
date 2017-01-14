@@ -1,0 +1,17 @@
+{
+  "name": "http-request-demo",
+  "version": "1.0.0",
+  "description": "Http and request example",
+  "main": "index.js",
+  "dependencies": {
+    "request": "^2.79.0"
+  },
+  "devDependencies": {
+    "mocha": "3.x"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
