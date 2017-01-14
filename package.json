@@ -13,5 +13,9 @@
     "start": "node index.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DenisSlaschilinDevPro/NodeJS.git"
+  }
 }
