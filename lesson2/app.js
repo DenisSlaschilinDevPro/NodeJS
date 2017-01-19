@@ -65,22 +65,3 @@ app.get('/api/:apiVersion/*', function (req, res) {
 
     });
 });
-
-app.delete('/api/:apiVersion/*', function (req, res) {
-    var filePath = req.path + req.method.toLowerCase() + '.json';
-
-    filePath = filePath.replace('/' + apiVersion, '');
-
-
-    filePath = path.join(__dirname, filePath);
-
-    fs.stat(filePath, function (err) {
-        res.type('json');
-
-        if (err) {
-            return res.json({ success: false, error: 'no such file' });
-        }
-        fs.createReadStream(filePath).pipe(res);
-
-    });
-});
