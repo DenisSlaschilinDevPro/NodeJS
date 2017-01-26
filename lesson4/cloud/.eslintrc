@@ -12,7 +12,7 @@
     "logRequest": 1
   },
   "parserOptions": {
-    "sourceType": "module",
+    "sourceType": "module"
   },
   "rules": {
     "block-scoped-var": 2,
