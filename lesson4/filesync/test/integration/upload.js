@@ -15,10 +15,10 @@ const NO_FILE_ERROR_PART = 'ENOENT: no such file or directory';
 const TRYING_TO_UPLOAD_MESSAGE = 'Trying to sync file ' + VALID_FILE_PATH;
 
 
-describe('Upload', function() {
+describe('Upload', () => {
 
 
-  it('should ask a password', function(done) {
+  it('should ask a password', done => {
     const command = spawn(
       'filesync', ['-u', VALID_USER, VALID_FILE_PATH],
       { capture: [ 'stdout', 'stderr' ]}
@@ -33,7 +33,7 @@ describe('Upload', function() {
   });
 
 
-  it('should give error on short password', function(done) {
+  it('should give error on short password', done => {
     const command = spawn('filesync', ['-u', VALID_USER, VALID_FILE_PATH], { capture: [ 'stdout', 'stderr' ]});
     const childProcess = command.childProcess;
     let askedPassword = false;
@@ -51,7 +51,7 @@ describe('Upload', function() {
   });
 
 
-  it('should give error if file not found', function(done) {
+  it('should give error if file not found', done => {
     const command = spawn('filesync', ['-u', VALID_USER, INVALID_FILE_PATH], { capture: [ 'stdout', 'stderr' ]})
       .catch(err => {
         expect(err.stderr.includes(NO_FILE_ERROR_PART)).to.equal(true);
@@ -65,7 +65,7 @@ describe('Upload', function() {
   });
 
 
-  it('should give error if server is down', function(done) {
+  it('should give error if server is down', done => {
     const command = spawn('filesync', ['-u', VALID_USER, VALID_FILE_PATH], { capture: [ 'stdout', 'stderr' ]});
     const childProcess = command.childProcess;
 
@@ -82,7 +82,7 @@ describe('Upload', function() {
     });
   });
 
-  it('should give error on invalid password', function(done) {
+  it('should give error on invalid password', done => {
     const command = spawn('filesync', ['-u', VALID_USER, VALID_FILE_PATH], { capture: [ 'stdout', 'stderr' ]});
     const childProcess = command.childProcess;
 
@@ -99,7 +99,7 @@ describe('Upload', function() {
     });
   });
 
-  it('should write message when trying to upload file', function(done) {
+  it('should write message when trying to upload file', done => {
     const command = spawn('filesync', ['-u', VALID_USER, VALID_FILE_PATH], { capture: [ 'stdout', 'stderr' ]});
     const childProcess = command.childProcess;
     let askedPassword = false;

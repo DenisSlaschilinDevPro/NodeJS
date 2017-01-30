@@ -17,7 +17,7 @@ const NO_FILE_ERROR_PART = 'ENOENT: no such file or directory';
 const STUB_SERVER_RESPONSE = 'ok';
 
 
-describe('Upload unit', function() {
+describe('Upload unit', () => {
 
   let postRequest;
 
@@ -37,21 +37,33 @@ describe('Upload unit', function() {
     console.log.restore();
   });
 
-  it('should give error if file doesnt exist', function() {
+  it('should give error if file doesnt exist', () => {
     return cloud.upload(INVALID_FILE_PATH)
-      .then(result => {
-        return Promise.reject('Got success result' + result);
-      })
-      .catch(function(err) {
-        return expect(err.message.includes(NO_FILE_ERROR_PART)).to.equal(true);
-      });
+      .then(result => Promise.reject(`Got success result ${result}`))
+      .catch(err => expect(err.message.includes(NO_FILE_ERROR_PART)).to.equal(true));
   });
 
-  var PostStub = function() {
-    ['auth', 'type', 'on', 'attach']
-      .map(method => this[method] = () => this);
-    this.set = () => STUB_SERVER_RESPONSE;
-  };
+  class PostStub {
+    auth() {
+      return 'auth';
+    }
+
+    type() {
+      return 'type';
+    }
+
+    on() {
+      return 'on';
+    }
+
+    attach() {
+      return 'attach';
+    }
+
+    set() {
+      return STUB_SERVER_RESPONSE;
+    }
+  }
 
   // // ES5 version
   // var PostStub = function() {
@@ -67,18 +79,16 @@ describe('Upload unit', function() {
   //   };
   // };
 
-  it('should return result of the cloud response', function() {
+  it('should return result of the cloud response', () => {
     postRequest.returns(new PostStub());
     return cloud.upload(VALID_FILE_PATH, VALID_USER, VALID_PASSWORD)
-      .then(function(result) {
+      .then(result => {
         return Promise.all([
           expect(result).to.equal(STUB_SERVER_RESPONSE),
           expect(console.log).to.be.calledWith(
-            'Trying to sync file', VALID_FILE_PATH, 'with size', VALID_FILE_SIZE
+            `Trying to sync file ${VALID_FILE_PATH} with size ${VALID_FILE_SIZE.size}`
           )
         ]);
       });
   });
-
-
 });

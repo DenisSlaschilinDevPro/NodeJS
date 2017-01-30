@@ -1,10 +1,10 @@
-var Promise = require('bluebird');
-var fs = Promise.promisifyAll(require('fs'));
-var path = require('path');
-var agent = require('superagent');
-var ProgressBar = require('ascii-progress');
+const Promise = require('bluebird');
+const fs = Promise.promisifyAll(require('fs'));
+const path = require('path');
+const agent = require('superagent');
+const ProgressBar = require('ascii-progress');
 
-var CLOUD_URL = 'localhost:3000/upload';
+const CLOUD_URL = 'localhost:3000/upload';
 
 module.exports = {
   upload: postFileToCloud
@@ -13,20 +13,20 @@ module.exports = {
 function postFileToCloud(filePath, username, password) {
   return fs.statAsync(filePath)
     .then(stats => {
-      console.log('Trying to sync file', filePath, 'with size', stats.size);
-      var bar = new ProgressBar({
+      console.log(`Trying to sync file ${filePath} with size ${stats.size}`);
+      const bar = new ProgressBar({
         schema: 'uploading [:bar] :percent',
         total: 100,
         width: 20
       });
-      var fileStream = fs.createReadStream(filePath);
-      var uploadUrl = generateUploadUrl(filePath);
+      const fileStream = fs.createReadStream(filePath);
+      const uploadUrl = generateUploadUrl(filePath);
       return agent
         .post(uploadUrl)
         .auth(username, password)
         .type('form')
-        .on('progress', function(e) {
-          var percentDone = Math.floor((e.loaded / e.total) * 100);
+        .on('progress', e => {
+          let percentDone = Math.floor((e.loaded / e.total) * 100);
           bar.tick(percentDone);
         })
         .attach('syncfile', fileStream)
@@ -35,7 +35,7 @@ function postFileToCloud(filePath, username, password) {
 }
 
 function generateUploadUrl(filePath) {
-  var filePathQuery = encodeURI(path.resolve(filePath));
-  console.log('filePathQuery generated', filePathQuery);
-  return CLOUD_URL + '?filePath=' + filePathQuery;
+  const filePathQuery = encodeURI(path.resolve(filePath));
+  console.log(`filePathQuery generated ${filePathQuery}`);
+  return `${CLOUD_URL}?filePath=${filePathQuery}`;
 }
