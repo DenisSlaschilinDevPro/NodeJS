@@ -5,11 +5,14 @@ const INVALID_FILE_PATH = '../../README123.md';
 const PASSWORD_PROMPT = 'Enter password:';
 const VALID_USER = 'qwe';
 const SHORT_PASSWORD = 'short';
+const INVALID_PASSWORD = 'invalid_securepass';
 const VALID_PASSWORD = 'securepass';
 const PASSWORD_MIN_LENGTH = 6;
 const SERVER_DOWN_ERROR = 'connect ECONNREFUSED 127.0.0.1:3000';
 const SHORT_PASSWORD_ERROR = 'Password should have length more than ' + PASSWORD_MIN_LENGTH;
+const INVALID_PASSWORD_ERROR = 'Unauthorized';
 const NO_FILE_ERROR_PART = 'ENOENT: no such file or directory';
+const TRYING_TO_UPLOAD_MESSAGE = 'Trying to sync file ' + VALID_FILE_PATH;
 
 
 describe('Upload', function() {
@@ -76,6 +79,40 @@ describe('Upload', function() {
       expect(stderr).to.equal(SERVER_DOWN_ERROR);
       childProcess.stderr.removeListener('data', errorHandler);
       done();
+    });
+  });
+
+  it('should give error on invalid password', function(done) {
+    const command = spawn('filesync', ['-u', VALID_USER, VALID_FILE_PATH], { capture: [ 'stdout', 'stderr' ]});
+    const childProcess = command.childProcess;
+
+    childProcess.stdout.on('data', function handler() {
+      childProcess.stdin.write(INVALID_PASSWORD + '\n');
+      childProcess.stdout.removeListener('data', handler);
+    });
+
+    childProcess.stderr.on('data', function errorHandler(data) {
+      const stderr = data.toString().trim();
+      expect(stderr).to.equal(INVALID_PASSWORD_ERROR);
+      childProcess.stderr.removeListener('data', errorHandler);
+      done();
+    });
+  });
+
+  it('should write message when trying to upload file', function(done) {
+    const command = spawn('filesync', ['-u', VALID_USER, VALID_FILE_PATH], { capture: [ 'stdout', 'stderr' ]});
+    const childProcess = command.childProcess;
+    let askedPassword = false;
+    childProcess.stdout.on('data', function handler(data) {
+      if (!askedPassword) {
+        askedPassword = true;
+        childProcess.stdin.write(VALID_PASSWORD + '\n');
+      } else {
+        const stdout = data.toString().trim();
+        expect(stdout).to.contain(TRYING_TO_UPLOAD_MESSAGE);
+        childProcess.stdout.removeListener('data', handler);
+        done();
+      }
     });
   });
 

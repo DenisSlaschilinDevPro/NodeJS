@@ -12,7 +12,7 @@
     "logRequest": 1
   },
   "parserOptions": {
-    "sourceType": "module",
+    "sourceType": "module"
   },
   "rules": {
     "block-scoped-var": 2,
@@ -25,7 +25,7 @@
     "eqeqeq": [2, "smart"],
     "indent": [2, 2, {"SwitchCase": 1}],
     "key-spacing": [2, { "beforeColon": false, "afterColon": true }],
-    "linebreak-style": [2, "unix"],
+    "linebreak-style": [2, "windows"],
     "new-cap": 0,
     "no-bitwise": 2,
     "no-unused-vars": 2,
