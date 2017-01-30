@@ -1,12 +1,12 @@
-var express = require('express');
-var routes = require('./routes');
-var log = require('./log');
+const express = require('express');
+const routes = require('./routes');
+const log = require('./log');
 
-var app = express();
+const app = express();
 
 app.use(routes);
 
-app.use(function(err, req, res, next) {// eslint-disable-line no-unused-vars
+app.use((err, req, res, next) => {
   log.error(err);
   res.status(err.status || err.code || 500);
   res.json(err.message);

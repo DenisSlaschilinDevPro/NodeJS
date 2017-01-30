@@ -1,27 +1,27 @@
-var config = require('../config');//TO-DO: switch to config module
-var basic = require('basic-auth');
-var router = require('express').Router();
-var uploadCtrl = require('../controllers/upload');
-var log = require('../log');
+const config = require('../config'); //TO-DO: switch to config module
+const basic = require('basic-auth');
+const router = require('express').Router();
+const uploadCtrl = require('../controllers/upload');
+const log = require('../log');
 
 router.post('/upload',
   basicAuth(),
   uploadCtrl.validate(),
   uploadCtrl.parse.single('syncfile'),
-  function(req, res) {
+  (req, res) => {
     log.verbose(req.file ? 'Uploaded' : 'Duplicate', req.query.filePath);
     res.status(200).json({ duplicate: !req.file });
   }
 );
 
 function basicAuth() {
-  return function(req, res, next) {
-    var creds = basic(req);
+  return (req, res, next) => {
+    const creds = basic(req);
     if (!creds || creds.name !== config.username || creds.pass !== config.password) {
-      log.error('Not Authorized', creds.username);
+      log.error(`Not Authorized ${creds.username}`);
       res.status(401).json('Not Authorized');
     } else {
-      log.debug('Authorized', creds.username);
+      log.debug(`Authorized ${creds.username}`);
       return next();
     }
   };
